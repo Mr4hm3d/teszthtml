@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS // SYSTEM</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --bg: #05070d;
+        --panel: rgba(12, 17, 28, 0.72);
+        --line: rgba(100, 220, 255, 0.16);
+        --cyan: #00eaff;
+        --blue: #367cff;
+        --purple: #9b5cff;
+        --text: #e8f7ff;
+        --muted: #718596;
+    }
+
+    body {
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at 50% 0%, rgba(0, 234, 255, .12), transparent 35%),
+            radial-gradient(circle at 90% 80%, rgba(155, 92, 255, .10), transparent 30%),
+            var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        overflow-x: hidden;
+    }
+
+    /* GRID */
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: .35;
+        background-image:
+            linear-gradient(rgba(0,234,255,.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,234,255,.035) 1px, transparent 1px);
+        background-size: 45px 45px;
+        mask-image: linear-gradient(to bottom, black, transparent 90%);
+    }
+
+    /* SCANLINE */
+    body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+            transparent 50%,
+            rgba(0,234,255,.015) 50%
+        );
+        background-size: 100% 4px;
+        z-index: 10;
+    }
+
+    .container {
+        width: min(1180px, calc(100% - 40px));
+        margin: auto;
+    }
+
+    /* NAV */
+    nav {
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        z-index: 5;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        font-size: 15px;
+    }
+
+    .logo-icon {
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--cyan);
+        position: relative;
+        transform: rotate(45deg);
+        box-shadow: 0 0 20px rgba(0,234,255,.3);
+    }
+
+    .logo-icon::after {
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: var(--cyan);
+        left: 10px;
+        top: 10px;
+        box-shadow: 0 0 15px var(--cyan);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 35px;
+    }
+
+    .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: .3s;
+    }
+
+    .nav-links a:hover {
+        color: var(--cyan);
+        text-shadow: 0 0 12px var(--cyan);
+    }
+
+    .status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 10px;
+        color: #7fffd4;
+        letter-spacing: 1px;
+    }
+
+    .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #38ffb3;
+        box-shadow: 0 0 12px #38ffb3;
+        animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+        50% { opacity: .3; transform: scale(.7); }
+    }
+
+    /* HERO */
+    .hero {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .hero-content {
+        max-width: 760px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--line);
+        background: rgba(0,234,255,.04);
+        padding: 8px 13px;
+        font-size: 10px;
+        color: var(--cyan);
+        letter-spacing: 2px;
+        margin-bottom: 25px;
+        backdrop-filter: blur(10px);
+    }
+
+    .eyebrow span {
+        width: 5px;
+        height: 5px;
+        background: var(--cyan);
+        box-shadow: 0 0 10px var(--cyan);
+    }
+
+    h1 {
+        font-size: clamp(60px, 9vw, 120px);
+        line-height: .86;
+        letter-spacing: -7px;
+        font-weight: 900;
+        margin-bottom: 30px;
+    }
+
+    h1 .gradient {
+        background: linear-gradient(
+            90deg,
+            #fff,
+            var(--cyan),
+            #7c9dff,
+            #fff
+        );
+        background-size: 300%;
+        -webkit-background-clip: text;
+        color: transparent;
+        animation: gradient 7s linear infinite;
+    }
+
+    @keyframes gradient {
+        to { background-position: 300%; }
+    }
+
+    .subtitle {
+        max-width: 620px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.8;
+        margin-bottom: 35px;
+    }
+
+    .actions {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 15px 24px;
+        border: 1px solid var(--cyan);
+        color: var(--cyan);
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 11px;
+        position: relative;
+        overflow: hidden;
+        transition: .3s;
+        background: rgba(0,234,255,.04);
+    }
+
+    .btn.primary {
+        background: var(--cyan);
+        color: #031016;
+        font-weight: 800;
+        box-shadow: 0 0 30px rgba(0,234,255,.2);
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 35px rgba(0,234,255,.35);
+    }
+
+    /* ORBIT */
+    .orbital {
+        position: absolute;
+        width: 520px;
+        height: 520px;
+        right: -80px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: .8;
+    }
+
+    .ring {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(0,234,255,.15);
+        border-radius: 50%;
+    }
+
+    .ring:nth-child(2) {
+        inset: 55px;
+        border-color: rgba(155,92,255,.18);
+    }
+
+    .ring:nth-child(3) {
+        inset: 115px;
+        border-color: rgba(0,234,255,.22);
+    }
+
+    .ring:nth-child(4) {
+        inset: 175px;
+        border-color: rgba(255,255,255,.12);
+    }
+
+    .orbit-dot {
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 20px var(--cyan);
+        top: 20px;
+        left: 50%;
+        transform-origin: 0 240px;
+        animation: orbit 8s linear infinite;
+    }
+
+    @keyframes orbit {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .core {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 130px;
+        height: 130px;
+        border: 1px solid var(--cyan);
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        box-shadow:
+            0 0 40px rgba(0,234,255,.15),
+            inset 0 0 35px rgba(0,234,255,.1);
+    }
+
+    .core::before {
+        content: "";
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        background: radial-gradient(circle, white 0%, var(--cyan) 25%, transparent 70%);
+        filter: blur(2px);
+    }
+
+    /* TERMINAL */
+    .terminal {
+        position: absolute;
+        right: 0;
+        bottom: 50px;
+        width: 330px;
+        background: rgba(3,8,15,.8);
+        border: 1px solid var(--line);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 20px 70px rgba(0,0,0,.4);
+        font-family: "Courier New", monospace;
+        font-size: 10px;
+    }
+
+    .terminal-head {
+        padding: 10px 13px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+    }
+
+    .terminal-body {
+        padding: 15px;
+        line-height: 1.8;
+        color: #70a8b7;
+    }
+
+    .terminal-body .green {
+        color: #48ffb1;
+    }
+
+    .terminal-body .cyan {
+        color: var(--cyan);
+    }
+
+    /* STATS */
+    .stats {
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        margin-bottom: 80px;
+    }
+
+    .stat {
+        padding: 25px;
+        border-right: 1px solid var(--line);
+    }
+
+    .stat:last-child {
+        border-right: 0;
+    }
+
+    .stat-number {
+        font-size: 25px;
+        font-weight: 800;
+        color: white;
+    }
+
+    .stat-label {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+        .orbital {
+            opacity: .18;
+            right: -200px;
+        }
+
+        .terminal {
+            display: none;
+        }
+
+        .nav-links {
+            display: none;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            width: min(100% - 28px, 1180px);
+        }
+
+        h1 {
+            font-size: 62px;
+            letter-spacing: -4px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+        }
+
+        .stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stat:nth-child(2) {
+            border-right: 0;
+        }
+
+        .stat:nth-child(-n+2) {
+            border-bottom: 1px solid var(--line);
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <nav>
+        <div class="logo">
+            <div class="logo-icon"></div>
+            NEXUS
+        </div>
+
+        <div class="nav-links">
+            <a href="#">System</a>
+            <a href="#">Network</a>
+            <a href="#">Technology</a>
+            <a href="#">Access</a>
+        </div>
+
+        <div class="status">
+            <div class="dot"></div>
+            SYSTEM ONLINE
+        </div>
+    </nav>
+
+    <main class="hero">
+
+        <div class="hero-content">
+
+            <div class="eyebrow">
+                <span></span>
+                NEXT GENERATION INFRASTRUCTURE
+            </div>
+
+            <h1>
+                BUILD<br>
+                <span class="gradient">BEYOND.</span>
+            </h1>
+
+            <p class="subtitle">
+                A high-performance digital infrastructure engineered for
+                speed, intelligence and absolute control. Connect your
+                systems. Automate everything. Scale without limits.
+            </p>
+
+            <div class="actions">
+                <a href="#" class="btn primary">Initialize →</a>
+                <a href="#" class="btn">Explore System</a>
+            </div>
+
+        </div>
+
+        <div class="orbital">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+
+            <div class="orbit-dot"></div>
+
+            <div class="core"></div>
+        </div>
+
+        <div class="terminal">
+            <div class="terminal-head">
+                <span>NEXUS://CORE</span>
+                <span>● ● ●</span>
+            </div>
+
+            <div class="terminal-body">
+                <div>> initializing core...</div>
+                <div class="green">[ OK ] network online</div>
+                <div class="green">[ OK ] security active</div>
+                <div class="green">[ OK ] nodes connected</div>
+                <br>
+                <div>> system_status</div>
+                <div class="cyan">ONLINE // 99.999%</div>
+                <div>> awaiting command_</div>
+            </div>
+        </div>
+
+    </main>
+
+    <section class="stats">
+        <div class="stat">
+            <div class="stat-number">99.99%</div>
+            <div class="stat-label">Uptime</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Monitoring</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-number">0.2ms</div>
+            <div class="stat-label">Response</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Scalability</div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // Subtle mouse-reactive orbital movement
+    const orbital = document.querySelector(".orbital");
+
+    document.addEventListener("mousemove", e => {
+        const x = (e.clientX / window.innerWidth - .5) * 20;
+        const y = (e.clientY / window.innerHeight - .5) * 20;
+
+        orbital.style.transform =
+            `translate(${x}px, calc(-50% + ${y}px))`;
+    });
+</script>
+
+</body>
+</html>
